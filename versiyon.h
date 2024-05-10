@@ -8,23 +8,23 @@
 #ifndef VERSIYON_H_
 #define VERSIYON_H_
 
-#define VERSIYON "0.0.1"
+#define VERSIYON "0.0.2"
 
 #define MAJOR 0
 #define MINOR 0
-#define BUILD 1
-
+#define BUILD 2
 /******************************************************
 *
-* Versiyon    : 0.0.1
-* Tarih       : 04.05.2024
+* Versiyon    : 0.0.2
+* Tarih       : 10.05.2024
 * Yazanlar    : Onur Dibic
 * 
 * IAR Embedded WorkBench IDE : 7.12.1
 * 
 * Aciklamalar :
-* - ilk commit
-* - SPI hattindan veri gönderilip, alinmistir. 
-* Logic analizor ile test edilmistir.
-*
-*******************************************************/
+* - RC522 entegresinden okuma ve entegreye yazma islemleri yapilmistir.
+* - RC522 anteni ile bir kart okutulup okutulmadigini tespit edilmistir.
+* - RC522 entegresini faz ve polaritesine gore kod optimize edilmistir.
+* - RC522 entegresinden RFID TAG'in datasina veri okuyum yazma islemi yapilmistir.
+* - Kod icinde yazilan fonksiyonlardan myRc522 kutuphanesi olusturulmustur.
+******************************************************/

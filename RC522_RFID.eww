@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workspace>
     <project>
+        <path>$WS_DIR$\..\..\..\Users\onurd\Desktop\IAR\ADC\adc.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\..\..\Users\onurd\Desktop\IAR\Interrupt\Interrupt.ewp</path>
+    </project>
+    <project>
         <path>$WS_DIR$\RC522_RFID.ewp</path>
+    </project>
+    <project>
+        <path>$WS_DIR$\..\..\..\Users\onurd\Desktop\IAR\RFIDyazma\Yazma.ewp</path>
     </project>
     <batchBuild />
 </workspace>

@@ -231,7 +231,7 @@
                 </option>
                 <option>
                     <name>SoftwareBreakpointEnable</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>RadioSoftwareBreakpointType</name>
@@ -287,7 +287,7 @@
                 </option>
                 <option>
                     <name>RadioJtagSpeedType</name>
-                    <state>2</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>memoryTypeSlave</name>

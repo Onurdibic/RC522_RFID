@@ -32,8 +32,6 @@
 
 "ti_usb" 
 
-"--use_emulated_breakpoints" 
-
 "--settlingtime=0" 
 
 "--msp430_dll" 
@@ -46,7 +44,7 @@
 
 "--jtag_speed" 
 
-"slow" 
+"medium" 
 
 "--memtype" 
 

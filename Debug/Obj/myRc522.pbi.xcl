@@ -1,4 +1,4 @@
-"C:\Git_Workspace\RC522_RFID_WS\RC522_RFID\main.c"
+"C:\Git_Workspace\RC522_RFID_WS\RC522_RFID\myRc522.c"
 -std=c99
 -ferror-limit=0
 -fbracket-depth=512

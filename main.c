@@ -1,115 +1,168 @@
 #include <msp430g2553.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <myRc522.h>
+static int dataflag =0;
+uint8_t i = 0x00;
+unsigned char data1[16] = {0xFF,0xAA,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xAA,0xFF};
+unsigned char data2[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}; 
+unsigned char DefaultKey[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}; 
 
-// SPI Konfig¨¹rasyonu
-#define BIT_CLK  BIT5   // SCLK (P1.5)
-#define BIT_SOMI BIT6   // MISO (P1.6)
-#define BIT_SIMO BIT7   // MOSI (P1.7)
-#define BIT_CS   BIT0   // CS (P2.0)
-
-char packet[]={0xF0,0xF0,0xF0,0x40};
-int i;
-
-// SPI haberle?mesi i?in i?levler
-void spiInit() {
-    P1SEL |= BIT_CLK | BIT_SIMO | BIT_SOMI;
-    P1SEL2 |= BIT_CLK | BIT_SIMO | BIT_SOMI;
-    
-    P2DIR |= BIT_CS;
-    P2OUT |= BIT_CS;
-    
-    UCA0CTL1 |= UCSWRST;
-    UCB0CTL0 |= UCCKPH + UCMSB + UCMST + UCSYNC + UCCKPL; // 3-pin, 8-bit SPI master
-    UCB0CTL1 |= UCSSEL_2; // SMCLK
-    UCB0BR0 = 0x01; // /2
-    UCB0BR1 = 0;
-    UCB0CTL1 &= ~UCSWRST; // A??k ?evir
-}
-
-void spiWrite(uint8_t data) {
-    UCB0TXBUF = data;
-    while (!(IFG2 & UCB0TXIFG)); // Bekleme
-}
-
-uint8_t spiRead() {
-    while (!(IFG2 & UCB0RXIFG)); // Bekleme
-    return UCB0RXBUF;
-}
-
-uint8_t Buffer_u8a[128] = {0};
-uint16_t BufferSayac_u16 = 0;
+unsigned char tanimliIDs[10][5]={0};
 
 void main(void)
 {
     WDTCTL = WDTPW + WDTHOLD;                 // Watchdog timeri durdur
-
-    spiInit();
-    //P1OUT |= BIT0;                            // LED için P1.0'i high sur
-    //P1DIR |= BIT0;                            // LED için P1.0'i high sur
-    //
-    //UCB0CTL1 |= UCSWRST;                      // **Durum makinesini sifira ayarla**
-    //UCB0CTL0 |= UCMST + UCSYNC + UCCKPL + UCMSB; // 3-pin, 8-bit SPI master
-    //                                            // Saat polaritesi yüksek, MSB
-    //UCB0CTL1 |= UCSSEL_2;                     // SMCLK
-    //UCB0BR0 = 0x0A;                           // 10
-    //UCB0BR1 = 0;
-    //
-    //                           // Modülasyon yok
-    //UCB0CTL1 &= ~UCSWRST;  // **USCI durum makinesini baslat**
-
-    //P1OUT |= BIT5;
-    //P1REN &= ~BIT5;
-  
-    //P1DIR &= ~BIT3; // P1.3'¨¹ giri? yap
-    //P1REN |= BIT3; // P1.3'¨¹ y¨¹kseltici diren? ile etkinle?tir
-    //P1OUT |= BIT3; // P1.3'¨¹ y¨¹ksek seviyeye ?ek
-    //P1IE |= BIT3; // P1.3 i?in kesmeyi etkinle?tir
-    //P1IES |= BIT3; // Y¨¹kselen kenara g?re kesmeyi yap?land?r
-    //P1IFG &= ~BIT3; // Kesme bayra??n? temizle
     
-    //IE2 |= UCB0TXIE;  //enable A0 TX Irq
-    //IFG2 &= ~UCB0TXIFG; //clear flag
- 
-    //__bis_SR_register(LPM0_bits + GIE);   
-                                          // CPU off, enable interrupts
-    while(1){
-        
-        P2OUT &= ~BIT0;
-        spiWrite(0xF);
-        Buffer_u8a[BufferSayac_u16++] = spiRead();
-         P2OUT |= BIT0;
-         __delay_cycles(500000);  
-         P1OUT &= ~BIT0;
-         __delay_cycles(500000);  
-         P1OUT |= BIT0;
-        if(BufferSayac_u16 > 127)
+    spiInit();
+    rc522Init();
+    
+    P1OUT &= ~BIT0;       //Kart eslesiyo mu ?                     
+    P1DIR |= BIT0;                          
+    P1OUT &= ~BIT1;       //Kart Geldi mi ?                     
+    P1DIR |= BIT1;
+    P2OUT &= ~BIT5;       //Data Bos                    
+    P2DIR |= BIT5;                            
+    P2OUT &= ~BIT4;       //Data Dolu                      
+    P2DIR |= BIT4;
+    unsigned char status = 0;
+    unsigned char str[6] = {0};
+    unsigned char strd[16] = {0};
+    unsigned char gelenID[5]={0}; 
+    
+    P1DIR &= ~BIT3;   // P1.3'i giris yap
+    P1REN |= BIT3;   // P1.3'i yukseltici direnc ile etkinle?tir
+    P1OUT |= BIT3;   // P1.3'un yuksek seviyeye ?ek
+    P1IE |= BIT3;    // P1.3 icin kesmeyi etkinle?tir
+    P1IES |= BIT3;   // Yukselen kenara g?re kesmeyi yap?land?r
+    P1IFG &= ~BIT3;  // Kesme bayragini temizle
+    
+    P2DIR &= ~BIT3;   // P1.3'i giris yap
+    P2REN |= BIT3;    // P1.3'i yukseltici direnc ile etkinle?tir
+    P2OUT |= BIT3;    // P1.3'un yuksek seviyeye ?ek
+    P2IE |= BIT3;     // P1.3 icin kesmeyi etkinle?tir
+    P2IES |= BIT3;    // Yukselen kenara g?re kesmeyi yap?land?r
+    P2IFG &= ~BIT3;   // Kesme bayragini temizle
+    
+    __bis_SR_register(GIE);
+                             
+    while(1)
+    { 
+      /*
+      if(dataflag==1)
+      {
+        for(int i=0; i<5;i++)
         {
-            BufferSayac_u16 = 0;
+          status = Request(PICC_REQIDL, str); //Kart geldi mi ?
+          status = kartIDOku(str);
+          if(status == MI_OK)
+            break;
+        }
+          status = SelectTag(str);
+          status = Auth(PICC_AUTHENT1A,1,DefaultKey,str);
+          
+          if(status == MI_OK)
+          {
+             if(i==0x00)
+             { 
+                 status = WriteBlock(1,data1);
+                 status= ReadBlock(1,strd);    
+             }
+              i=i++;
+             if(i==0x02)
+             { 
+                 status = WriteBlock(1,data2);
+                 status= ReadBlock(1,strd);
+                 i=0x00;
+             }
+          }
+        dataflag=0;
+      }  
+      if(strd[0]==data1[0] && strd[1]==data1[1] && strd[14]==data1[14] && strd[15]==data1[15])
+      {
+        P2OUT &= ~BIT5;
+        P2OUT |=BIT4;
+      }
+      else
+      {
+        P2OUT &= ~BIT4;
+        P2OUT |=BIT5;
+      }
+       */
+       
+        status = Request(PICC_REQIDL, str);
+        if (status == MI_OK)
+         {
+            status = kartIDOku(str); //Geldiyse, ID oku
+            P1OUT |=BIT1; // Ledi yak
+         }
+        else
+        {
+           P1OUT &= ~BIT1; 
+        }
+        if (status == MI_OK)
+        {
+           for (int i=0;i<5;i++)
+           {
+             gelenID[i]=str[i]; //Gelen ID yi buffera at
+           }
+           for(int j=0;j<10;j++) 
+           {
+             if( tanimliIDs[j][0]==gelenID[0]&&
+                tanimliIDs[j][1]==gelenID[1]&&
+                tanimliIDs[j][2]==gelenID[2]&&
+                tanimliIDs[j][3]==gelenID[3]&&
+                tanimliIDs[j][4]==gelenID[4]  ) 
+               {
+                 P1OUT |=BIT0; //ID tanimliysa ledi yak.
+                 __delay_cycles(1000);
+                 
+               }
+               else
+               {  
+                 P1OUT &= ~BIT0;//ID tanimli degilse ledi sondur.
+               }
+           }
         }
     }
 }
-/*
+
+#pragma vector=PORT2_VECTOR
+__interrupt void Port_2(void) 
+{
+    dataflag=1;
+    P1IFG &= ~BIT3;
+}
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1(void) 
 {
-  i=0;
-  UCB0TXBUF = packet[i];
-  P1IFG &= ~ BIT3;  
-    
+    unsigned char str[8]= {0}; 
+    unsigned char status = 5;
+    static uint8_t i=0; 
+    unsigned char gelenID[5]={0};
+    status = Request(PICC_REQIDL, str);
+    if (status == MI_OK)
+    {
+      status = kartIDOku(str);
+      if (status == MI_OK)
+      {
+        for (int z=0;z<5;z++)
+        {
+          gelenID[z]=str[z]; //Gelen ID yi buffera at
+        }
+        for(int j=0;j<5;j++)
+        {
+          tanimliIDs[i][j]=gelenID[j]; //Tanimli ID bufferina at
+        }
+        i++;
+        if(i>9)
+        {
+          i=0; //10 u gecerse 0 la
+        }
+        P1OUT |=BIT1;
+         __delay_cycles(500000);
+        P1OUT &= ~BIT1;
+      }  
+    }
+     P1IFG &= ~BIT3;
 }
-#pragma vector= USCIAB0TX_VECTOR
-__interrupt void USCI0TX_ISR(void)
-{
-    i++;
-    if(i<sizeof(packet))
-    {
-      //94 99
-      UCB0TXBUF = packet[i];
-    }
-    else
-    {
-       IFG2 &= ~UCB0TXIFG; 
-    }
-    
-   
-}*/

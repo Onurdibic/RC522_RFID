@@ -2157,6 +2157,12 @@
         <name>$PROJ_DIR$\main.c</name>
     </file>
     <file>
+        <name>$PROJ_DIR$\myRc522.c</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\myRc522.h</name>
+    </file>
+    <file>
         <name>$PROJ_DIR$\versiyon.h</name>
     </file>
 </project>

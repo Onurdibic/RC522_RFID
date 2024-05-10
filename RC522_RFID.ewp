@@ -433,7 +433,7 @@
                 </option>
                 <option>
                     <name>CCOptLevel</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCOptStrategy</name>
@@ -442,7 +442,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CInput</name>
@@ -823,7 +823,7 @@
                 </option>
                 <option>
                     <name>XclFile</name>
-                    <state>$TOOLKIT_DIR$\config\linker\lnk430f149.xcl</state>
+                    <state>$TOOLKIT_DIR$\config\linker\lnk430g2553.xcl</state>
                 </option>
                 <option>
                     <name>XclFileSlave</name>
@@ -2299,6 +2299,12 @@
     </configuration>
     <file>
         <name>$PROJ_DIR$\main.c</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\myRc522.c</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\myRc522.h</name>
     </file>
     <file>
         <name>$PROJ_DIR$\versiyon.h</name>
