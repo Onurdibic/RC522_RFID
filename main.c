@@ -27,7 +27,7 @@ void main(void)
     P2DIR |= BIT4;
     unsigned char status = 0;
     unsigned char str[6] = {0};
-    unsigned char strd[16] = {0};
+    unsigned char strx[16] = {0};
     unsigned char gelenID[5]={0}; 
     
     P1DIR &= ~BIT3;   // P1.3'i giris yap
@@ -44,11 +44,28 @@ void main(void)
     P2IES |= BIT3;    // Yukselen kenara g?re kesmeyi yap?land?r
     P2IFG &= ~BIT3;   // Kesme bayragini temizle
     
+    P1DIR &= ~BIT4; // P1.4'i giris yap (Yeni buton)
+    P1REN |= BIT4; // P1.4'i yukseltici direnc ile etkinle?tir
+    P1OUT |= BIT4; // P1.4'un yuksek seviyeye ?ek
+    
     __bis_SR_register(GIE);
                              
     while(1)
     { 
-      /*
+      if ((P1IN & BIT4) == 0) // Butona basilmis mi kontrol et
+      {
+        status = Request(PICC_REQIDL, str);
+        status = kartIDOku(str);
+        if (status == MI_OK)
+        {
+            status = SelectTag(str);
+            status = Auth(PICC_AUTHENT1A, 1, DefaultKey, str);
+            if (status == MI_OK)
+            {
+                status = WriteBlock(1, data1); // data2'yi yaz
+            }
+        }
+      }
       if(dataflag==1)
       {
         for(int i=0; i<5;i++)
@@ -63,33 +80,11 @@ void main(void)
           
           if(status == MI_OK)
           {
-             if(i==0x00)
-             { 
-                 status = WriteBlock(1,data1);
-                 status= ReadBlock(1,strd);    
-             }
-              i=i++;
-             if(i==0x02)
-             { 
-                 status = WriteBlock(1,data2);
-                 status= ReadBlock(1,strd);
-                 i=0x00;
-             }
+               status = WriteBlock(1,data2);              
           }
         dataflag=0;
       }  
-      if(strd[0]==data1[0] && strd[1]==data1[1] && strd[14]==data1[14] && strd[15]==data1[15])
-      {
-        P2OUT &= ~BIT5;
-        P2OUT |=BIT4;
-      }
-      else
-      {
-        P2OUT &= ~BIT4;
-        P2OUT |=BIT5;
-      }
-       */
-       
+
         status = Request(PICC_REQIDL, str);
         if (status == MI_OK)
          {
@@ -100,6 +95,7 @@ void main(void)
         {
            P1OUT &= ~BIT1; 
         }
+        
         if (status == MI_OK)
         {
            for (int i=0;i<5;i++)
@@ -115,8 +111,7 @@ void main(void)
                 tanimliIDs[j][4]==gelenID[4]  ) 
                {
                  P1OUT |=BIT0; //ID tanimliysa ledi yak.
-                 __delay_cycles(1000);
-                 
+                 __delay_cycles(10000);
                }
                else
                {  
@@ -124,23 +119,33 @@ void main(void)
                }
            }
         }
+        
+            
+           status = SelectTag(str);
+           status = Auth(PICC_AUTHENT1A,1,DefaultKey,str);
+             
+           status= ReadBlock(1,strx);   
+           if(strx[0]==0x00 && strx[1]==0x00 && strx[14]==0x00 && strx[15]==0x00)
+           {  
+               P2OUT &= ~BIT5;
+               P2OUT |=BIT4;//sari led
+           }
+           if(strx[0]==data1[0] && strx[1]==data1[1] && strx[14]==data1[14] && strx[15]==data1[15])
+           {
+              P2OUT &= ~BIT4;
+              P2OUT |=BIT5;//yesil led
+           } 
     }
 }
-
 #pragma vector=PORT2_VECTOR
 __interrupt void Port_2(void) 
-{
-    dataflag=1;
-    P1IFG &= ~BIT3;
-}
-#pragma vector=PORT1_VECTOR
-__interrupt void Port_1(void) 
 {
     unsigned char str[8]= {0}; 
     unsigned char status = 5;
     static uint8_t i=0; 
     unsigned char gelenID[5]={0};
     status = Request(PICC_REQIDL, str);
+    
     if (status == MI_OK)
     {
       status = kartIDOku(str);
@@ -159,10 +164,13 @@ __interrupt void Port_1(void)
         {
           i=0; //10 u gecerse 0 la
         }
-        P1OUT |=BIT1;
-         __delay_cycles(500000);
-        P1OUT &= ~BIT1;
       }  
     }
-     P1IFG &= ~BIT3;
+     P2IFG &= ~BIT3;
+}
+#pragma vector=PORT1_VECTOR
+__interrupt void Port_1(void) 
+{
+    dataflag=1;
+    P1IFG &= ~BIT3;
 }
