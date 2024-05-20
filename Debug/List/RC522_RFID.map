@@ -1,3 +1,10 @@
+Warning[w6]: Type conflict for external/entry "main", in module myRc522 against external/entry in module main; prototyped function vs K&R function
+  /* In module myRc522: */
+  /* K&R Function, args 0, attr 0 */
+  int (__cc_version2 main)();
+  /* In module main: */
+  /* Function, args 0, attr 0 */
+  void (__cc_version2 main)(void);
 Warning[w6]: Type conflict for external/entry "Auth", in module main against external/entry in module myRc522; prototyped function vs K&R function
   /* In module main: */
   /* K&R Function, args 0, attr 0 */
@@ -42,7 +49,7 @@ Warning[w6]: Type conflict for external/entry "kartIDOku", in module main agains
 #                                                                              #
 #      IAR Universal Linker V6.5.1.95                                          #
 #                                                                              #
-#           Link time     =  17/May/2024  17:07:55                             #
+#           Link time     =  20/May/2024  13:51:08                             #
 #           Target CPU    =  MSP430                                            #
 #           List file     =  C:\Git_Workspace\RC522_RFID_WS\RC522_RFID\Debug\L #
 #                            ist\RC522_RFID.map                                #
@@ -51,7 +58,7 @@ Warning[w6]: Type conflict for external/entry "kartIDOku", in module main agains
 #                            Format: ubrof10                                   #
 #                            UBROF version 10.0.6                              #
 #                            Using library modules for C-SPY (-rt)             #
-#           Command line  =  -f C:\Users\onurd\AppData\Local\Temp\EW5F51.tmp   #
+#           Command line  =  -f C:\Users\onurd\AppData\Local\Temp\EW76A5.tmp   #
 #                            (C:\Git_Workspace\RC522_RFID_WS\RC522_RFID\Debug\ #
 #                            Obj\main.r43                                      #
 #                            C:\Git_Workspace\RC522_RFID_WS\RC522_RFID\Debug\O #
@@ -309,6 +316,7 @@ DATA16_Z
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
            main                    C03E            Segment part 19 (?cstart)
+                                                   spiRead (myRc522)
                calls direct
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
@@ -328,11 +336,11 @@ DATA16_Z
            Port_2::i               025A 
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C9B2 - C9BB (0xa bytes), align: 1
+  Relative segment, address: C9D6 - C9DF (0xa bytes), align: 1
   Segment part 34.            Intra module refs:   Port_1::??INTVEC 4
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           Port_1                  C9B2 
+           Port_1                  C9D6 
                interrupt function
     -------------------------------------------------------------------------
 INTVEC
@@ -443,22 +451,23 @@ DATA16_AN
            spiInit                 C870            main (main)
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C9A6 - C9B1 (0xc bytes), align: 1
+  Relative segment, address: C9C0 - C9CB (0xc bytes), align: 1
   Segment part 15.            Intra module refs:   rc522ReadRegister
                                                    rc522WriteRegister
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           spiWrite                C9A6 
+           spiWrite                C9C0 
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C99A - C9A5 (0xc bytes), align: 1
+  Relative segment, address: C8C8 - C8E9 (0x22 bytes), align: 1
   Segment part 16.            Intra module refs:   rc522ReadRegister
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           spiRead                 C99A 
+           spiRead                 C8C8 
+               calls direct
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C926 - C943 (0x1e bytes), align: 1
+  Relative segment, address: C94C - C969 (0x1e bytes), align: 1
   Segment part 17.            Intra module refs:   CalulateCRC
                                                    ClearBitMask
                                                    Request
@@ -469,11 +478,11 @@ DATA16_AN
                                                    rc522Reset
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           rc522WriteRegister      C926 
+           rc522WriteRegister      C94C 
                calls direct
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C8A2 - C8C3 (0x22 bytes), align: 1
+  Relative segment, address: C8A2 - C8C7 (0x26 bytes), align: 1
   Segment part 18.            Intra module refs:   Auth
                                                    CalulateCRC
                                                    ClearBitMask
@@ -486,38 +495,38 @@ DATA16_AN
                calls direct
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C8E6 - C905 (0x20 bytes), align: 1
+  Relative segment, address: C90C - C92B (0x20 bytes), align: 1
   Segment part 19.            Intra module refs:   CalulateCRC
                                                    ToCard
                                                    rc522AntennaOn
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           SetBitMask              C8E6 
+           SetBitMask              C90C 
                calls direct
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C906 - C925 (0x20 bytes), align: 1
+  Relative segment, address: C92C - C94B (0x20 bytes), align: 1
   Segment part 20.            Intra module refs:   CalulateCRC
                                                    ToCard
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ClearBitMask            C906 
+           ClearBitMask            C92C 
                calls direct
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C8C4 - C8E5 (0x22 bytes), align: 1
+  Relative segment, address: C8EA - C90B (0x22 bytes), align: 1
   Segment part 21.            Intra module refs:   rc522Init
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           rc522AntennaOn          C8C4 
+           rc522AntennaOn          C8EA 
                calls direct
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C9BC - C9C5 (0xa bytes), align: 1
+  Relative segment, address: C9CC - C9D5 (0xa bytes), align: 1
   Segment part 23.            Intra module refs:   rc522Init
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           rc522Reset              C9BC 
+           rc522Reset              C9CC 
                calls direct
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
@@ -609,11 +618,11 @@ DATA16_AN
   SEGMENTS IN THE MODULE
   ======================
 <CODE> 1 (was CODE)
-  Relative segment, address: C9D2 - C9D3 (0x2 bytes), align: 1
+  Relative segment, address: C9EC - C9ED (0x2 bytes), align: 1
   Segment part 2.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           __DebugBreak            C9D2            __exit (?__exit)
+           __DebugBreak            C9EC            __exit (?__exit)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?__exit
@@ -621,11 +630,11 @@ DATA16_AN
   SEGMENTS IN THE MODULE
   ======================
 <CODE> 1 (was CODE)
-  Relative segment, address: C956 - C967 (0x12 bytes), align: 1
+  Relative segment, address: C96A - C97B (0x12 bytes), align: 1
   Segment part 2.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           __exit                  C956            Segment part 6 (?_exit)
+           __exit                  C96A            Segment part 6 (?_exit)
                                                    _exit (?_exit)
                calls direct
 
@@ -635,14 +644,14 @@ DATA16_AN
   SEGMENTS IN THE MODULE
   ======================
 <CODE> 1 (was CODE)
-  Relative segment, address: C9C6, align: 1
+  Relative segment, address: C9E0, align: 1
   Segment part 0.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           _exit                   C9C6            exit (?exit)
+           _exit                   C9E0            exit (?exit)
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C9C6 - C9C9 (0x4 bytes), align: 1
+  Relative segment, address: C9E0 - C9E3 (0x4 bytes), align: 1
   Segment part 6.             Intra module refs:   _exit
 
     -------------------------------------------------------------------------
@@ -719,49 +728,51 @@ RESET
   SEGMENTS IN THE MODULE
   ======================
 <CODE> 1 (was CODE)
-  Relative segment, address: C944 - C945 (0x2 bytes), align: 1
+  Relative segment, address: C97C - C97D (0x2 bytes), align: 1
   Segment part 0.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?Epilogue8              C944            ToCard (myRc522)
+           ?Epilogue8              C97C            ToCard (myRc522)
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C946 - C947 (0x2 bytes), align: 1
+  Relative segment, address: C97E - C97F (0x2 bytes), align: 1
   Segment part 1.             Intra module refs:   ?Epilogue8
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?Epilogue7              C946 
+           ?Epilogue7              C97E 
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C948 - C949 (0x2 bytes), align: 1
+  Relative segment, address: C980 - C981 (0x2 bytes), align: 1
   Segment part 2.             Intra module refs:   ?Epilogue7
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?Epilogue6              C948            Auth (myRc522)
+           ?Epilogue6              C980            Auth (myRc522)
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C94A - C94B (0x2 bytes), align: 1
+  Relative segment, address: C982 - C983 (0x2 bytes), align: 1
   Segment part 3.             Intra module refs:   ?Epilogue6
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?Epilogue5              C94A            CalulateCRC (myRc522)
+           ?Epilogue5              C982            CalulateCRC (myRc522)
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C94C - C94D (0x2 bytes), align: 1
+  Relative segment, address: C984 - C985 (0x2 bytes), align: 1
   Segment part 4.             Intra module refs:   ?Epilogue5
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?Epilogue4              C94C            SelectTag (myRc522)
+           ?Epilogue4              C984            SelectTag (myRc522)
                                                    WriteBlock (myRc522)
                                                    kartIDOku (myRc522)
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C94E - C955 (0x8 bytes), align: 1
+  Relative segment, address: C986 - C98D (0x8 bytes), align: 1
   Segment part 5.             Intra module refs:   ?Epilogue4
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?Epilogue3              C94E            ReadBlock (myRc522)
+           ?Epilogue3              C986            ClearBitMask (myRc522)
+                                                   ReadBlock (myRc522)
                                                    Request (myRc522)
+                                                   SetBitMask (myRc522)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?exit
@@ -769,11 +780,11 @@ RESET
   SEGMENTS IN THE MODULE
   ======================
 <CODE> 1 (was CODE)
-  Relative segment, address: C9CE - C9D1 (0x4 bytes), align: 1
+  Relative segment, address: C9E8 - C9EB (0x4 bytes), align: 1
   Segment part 2.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           exit                    C9CE            Segment part 19 (?cstart)
+           exit                    C9E8            Segment part 19 (?cstart)
                calls direct
 
     -------------------------------------------------------------------------
@@ -782,11 +793,11 @@ RESET
   SEGMENTS IN THE MODULE
   ======================
 <CODE> 1 (was CODE)
-  Relative segment, address: C968 - C979 (0x12 bytes), align: 1
+  Relative segment, address: C98E - C99F (0x12 bytes), align: 1
   Segment part 2.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           memcpy                  C968            __data16_memcpy (?memzero)
+           memcpy                  C98E            __data16_memcpy (?memzero)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?ClearMemoryWords
@@ -794,11 +805,11 @@ RESET
   SEGMENTS IN THE MODULE
   ======================
 <CODE> 1 (was CODE)
-  Relative segment, address: C97A - C989 (0x10 bytes), align: 1
+  Relative segment, address: C9B0 - C9BF (0x10 bytes), align: 1
   Segment part 0.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           ?ClearMemoryWords       C97A            main (main)
+           ?ClearMemoryWords       C9B0            main (main)
 
     -------------------------------------------------------------------------
   LIBRARY MODULE, NAME : ?memzero
@@ -806,18 +817,18 @@ RESET
   SEGMENTS IN THE MODULE
   ======================
 <CODE> 1 (was CODE)
-  Relative segment, address: C98A - C999 (0x10 bytes), align: 1
+  Relative segment, address: C9A0 - C9AF (0x10 bytes), align: 1
   Segment part 2.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           __data16_memzero        C98A            ?cstart_init_zero (?cstart)
+           __data16_memzero        C9A0            ?cstart_init_zero (?cstart)
     -------------------------------------------------------------------------
 <CODE> 1 (was CODE)
-  Relative segment, address: C9CA - C9CD (0x4 bytes), align: 1
+  Relative segment, address: C9E4 - C9E7 (0x4 bytes), align: 1
   Segment part 3.
            ENTRY                   ADDRESS         REF BY
            =====                   =======         ======
-           __data16_memcpy         C9CA            ?cstart_init_copy (?cstart)
+           __data16_memcpy         C9E4            ?cstart_init_copy (?cstart)
                calls direct
 
 
@@ -847,7 +858,7 @@ CSTACK                                 03B0 - 03FF              50   rel    1
 DATA16_C                                  C000                       dse    0
 DATA16_ID                              C000 - C015              16   rel    1
 CSTART                                 C016 - C03D              28   rel    1
-<CODE> 1                               C03E - C9D3             996   rel    1
+<CODE> 1                               C03E - C9ED             9B0   rel    1
 INTVEC                                 FFE0 - FFE7               8   com    1
 RESET                                  FFFE - FFFF               2   rel    1
 
@@ -857,10 +868,10 @@ RESET                                  FFFE - FFFF               2   rel    1
                 *                                      *
                 ****************************************
 
- 2 504 bytes of CODE  memory
+ 2 530 bytes of CODE  memory
    171 bytes of DATA  memory (+ 25 absolute )
     22 bytes of CONST memory
 
 Errors: none
-Warnings: 5
+Warnings: 6
 

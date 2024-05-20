@@ -32,7 +32,15 @@ void spiWrite(uint8_t data)
 
 uint8_t spiRead()
 {
-    while (!(IFG2 & UCB0RXIFG)); // Bekleme
+    uint16_t timeoutCounter = 0;
+
+    while (!(IFG2 & UCB0RXIFG)) {
+        timeoutCounter++;
+        if (timeoutCounter >= 1000) {
+            main();  // Zaman asimi durumunda hata isleyicisine git
+            return 0;  // Hata durumunda sifir döndür
+        }
+    }
     return UCB0RXBUF;
 }
 void rc522WriteRegister(uint8_t reg, uint8_t data)

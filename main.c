@@ -18,13 +18,17 @@ void main(void)
     rc522Init();
     
     P1OUT &= ~BIT0;       //Kart eslesiyo mu ?                     
-    P1DIR |= BIT0;                          
+    P1DIR |= BIT0; 
+   
     P1OUT &= ~BIT1;       //Kart Geldi mi ?                     
     P1DIR |= BIT1;
+  
     P2OUT &= ~BIT5;       //Data Bos                    
-    P2DIR |= BIT5;                            
+    P2DIR |= BIT5;  
+   
     P2OUT &= ~BIT4;       //Data Dolu                      
     P2DIR |= BIT4;
+   
     unsigned char status = 0;
     unsigned char str[6] = {0};
     unsigned char strx[16] = {0};
@@ -47,11 +51,13 @@ void main(void)
     P1DIR &= ~BIT4; // P1.4'i giris yap (Yeni buton)
     P1REN |= BIT4; // P1.4'i yukseltici direnc ile etkinle?tir
     P1OUT |= BIT4; // P1.4'un yuksek seviyeye ?ek
+   
     
     __bis_SR_register(GIE);
                              
     while(1)
     { 
+      
       if ((P1IN & BIT4) == 0) // Butona basilmis mi kontrol et
       {
         status = Request(PICC_REQIDL, str);
@@ -62,10 +68,11 @@ void main(void)
             status = Auth(PICC_AUTHENT1A, 1, DefaultKey, str);
             if (status == MI_OK)
             {
-                status = WriteBlock(1, data1); // data2'yi yaz
+                status = WriteBlock(1, data1); // data1'yi yaz
             }
         }
       }
+      
       if(dataflag==1)
       {
         for(int i=0; i<5;i++)
@@ -119,8 +126,6 @@ void main(void)
                }
            }
         }
-        
-            
            status = SelectTag(str);
            status = Auth(PICC_AUTHENT1A,1,DefaultKey,str);
              
